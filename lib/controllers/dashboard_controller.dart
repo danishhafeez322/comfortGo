@@ -11,7 +11,7 @@ class DashboardController extends GetxController {
   late final ScrollController pwsListController;
 
   RxBool isFabOpen = false.obs;
-  final isOnRootScreen = true.obs;
+  final isOnRootScreen = false.obs;
 
   @override
   void onInit() {
@@ -22,12 +22,17 @@ class DashboardController extends GetxController {
   final Map<DashBoardView, Widget> screens = {
     DashBoardView.home: HomeScreen(),
     DashBoardView.offerRide: OfferRideScreen(),
-    DashBoardView.requests: RequestsScreen(),
+    DashBoardView.requests: RideRequestsListScreen(),
   };
 
   void selectBottomTab(DashBoardView view) {
     if (view != currentView.value) {
       currentView.value = view;
+      if (view != DashBoardView.requests) {
+        isOnRootScreen.value = false;
+      } else {
+        isOnRootScreen.value = true;
+      }
     }
   }
 

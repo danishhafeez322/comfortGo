@@ -48,6 +48,7 @@ class ActionString {
 
 class AppStrings {
   static const String home = "Home";
+  static const String addRideRequest = "Add Ride Request";
   static const String offerRide = "Offer Ride";
   static const String requests = "Requests";
   static const String wait = "Please Wait";

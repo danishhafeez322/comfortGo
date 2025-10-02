@@ -2,6 +2,7 @@ import 'package:comfort_go/models/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -18,6 +19,19 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     fetchTrips();
+  }
+
+  Future<void> pickDepartureDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      dateController.text = DateFormat('MM-dd-yyyy').format(picked);
+      filterTrips();
+    }
   }
 
   Future<void> fetchTrips() async {

@@ -2,6 +2,7 @@ import 'package:comfort_go/config/app_config.dart';
 import 'package:comfort_go/constants/app_routes.dart';
 import 'package:comfort_go/constants/app_strings.dart';
 import 'package:comfort_go/firebase_options.dart';
+import 'package:comfort_go/services/auth_service.dart';
 import 'package:comfort_go/views/comfortGo_app/initial_binding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AppConfigurations.initialize();
+  await AuthService().signInAnonymously(); // ensure UID is created
   runApp(const MyApp());
 }
 

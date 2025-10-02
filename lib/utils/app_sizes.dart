@@ -674,17 +674,17 @@ class LoginSizes {
 }
 
 class ProfileSizes {
-  static double biometricButtonHeight() {
+  static double searchButtonHeight() {
     DeviceState state = getDeviceState();
     switch (state) {
       case DeviceState.phoneLandscape:
-        return 0.05.sh;
+        return 0.042.sh;
       case DeviceState.tabletLandscape:
         return 0.1.sh;
       case DeviceState.tabletPortrait:
         return 50.w;
       case DeviceState.phonePortrait:
-        return 62.w;
+        return 52.w;
     }
   }
 

@@ -1,10 +1,9 @@
-import 'dart:ui';
 import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/constants/enums.dart';
 import 'package:comfort_go/controllers/dashboard_controller.dart';
 import 'package:comfort_go/extentions/common_extensions.dart';
-import 'package:comfort_go/extentions/on_tap_extension.dart';
 import 'package:comfort_go/views/screens/dashboard/components/bottom_nav_item.dart';
+import 'package:comfort_go/views/screens/dashboard/components/fab_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -29,34 +28,33 @@ class Dashboard extends GetView<DashboardController> {
             ),
 
             // Blur overlay when FAB menu is open
-            if (controller.isFabOpen.value)
-              Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                  child:
-                      Container(
-                        color: Colors.white.withAlpha(
-                          165,
-                        ), // Optional: dim effect
-                      ).onTapWidget(
-                        onTap: () {
-                          controller.isFabOpen.value = false;
-                        },
-                      ),
-                ),
-              ),
+            // if (controller.isFabOpen.value)
+            //   Positioned.fill(
+            //     child: BackdropFilter(
+            //       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            //       child:
+            //           Container(
+            //             color: Colors.white.withAlpha(
+            //               165,
+            //             ), // Optional: dim effect
+            //           ).onTapWidget(
+            //             onTap: () {
+            //               controller.isFabOpen.value = false;
+            //             },
+            //           ),
+            //     ),
+            //   ),
             // FAB Menu Overlay
             // if (controller.isFabOpen.value) const PositionedFABMenu(),
           ],
         ),
 
         bottomNavigationBar: _BottomNavBar(),
-        // floatingActionButton: Obx(
-        //   () => controller.isOnRootScreen.value
-        //       ? FabButton()
-        //       : const SizedBox(),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Obx(
+          () =>
+              controller.isOnRootScreen.value ? FabButton() : const SizedBox(),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       );
     });
   }

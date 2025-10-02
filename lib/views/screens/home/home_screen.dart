@@ -2,6 +2,7 @@ import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/home_controller.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
+import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,10 @@ class HomeScreen extends GetView<HomeController> {
           const SizedBox(height: 16),
           Text(
             "Find a Trip",
-            style: TextStyle(fontSize: FontSizes.largeFontSize()),
+            style: TextStyle(
+              fontSize: FontSizes.largeFontSize(),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 16),
           // 🔍 Search Filters
@@ -29,9 +33,11 @@ class HomeScreen extends GetView<HomeController> {
               Expanded(
                 child: TextField(
                   controller: controller.pickupController,
-                  decoration: const InputDecoration(
-                    labelText: "Pickup City",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: "Pickup City",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                   ),
                   onChanged: (_) => controller.filterTrips(),
                 ),
@@ -40,9 +46,11 @@ class HomeScreen extends GetView<HomeController> {
               Expanded(
                 child: TextField(
                   controller: controller.dropController,
-                  decoration: const InputDecoration(
-                    labelText: "Drop City",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: "Drop City",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                   ),
                   onChanged: (_) => controller.filterTrips(),
                 ),
@@ -58,29 +66,18 @@ class HomeScreen extends GetView<HomeController> {
                 child: TextField(
                   controller: controller.dateController,
                   readOnly: true,
-                  decoration: const InputDecoration(
-                    labelText: "Departure Date",
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    hintText: "Departure Date",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                   ),
-                  onTap: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (picked != null) {
-                      controller.dateController.text = DateFormat(
-                        'yyyy-MM-dd',
-                      ).format(picked);
-                      controller.filterTrips();
-                    }
-                  },
+                  onTap: () => controller.pickDepartureDate(context),
                 ),
               ),
               SizedBox(
                 width: 0.34.sw,
-                height: ProfileSizes.biometricButtonHeight(),
+                height: ProfileSizes.searchButtonHeight(),
                 child: ExpandedButton(
                   selected: true,
                   btnColor: AppColors.backButtonColors,
@@ -89,9 +86,8 @@ class HomeScreen extends GetView<HomeController> {
                   btnTxtColor: AppColors.whiteColor,
                   txtSize: FontSizes.mediumFontSize(),
                   title: "Search",
-                  onTap: () async {
-                    Get.back<bool>(result: false);
-                  },
+                  roundCorner: 10,
+                  onTap: () async {},
                 ),
               ),
             ],
