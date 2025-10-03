@@ -2,7 +2,6 @@ import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/home_controller.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
-import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

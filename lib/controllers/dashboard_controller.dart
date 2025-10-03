@@ -1,5 +1,5 @@
 import 'package:comfort_go/constants/enums.dart';
-import 'package:comfort_go/views/screens/offer_ride/offer_ride_screen.dart';
+import 'package:comfort_go/views/screens/my_rides/my_ride_screen.dart';
 import 'package:comfort_go/views/screens/requests/request_screen.dart';
 
 import '../../views/screens/home/home_screen.dart';
@@ -21,7 +21,7 @@ class DashboardController extends GetxController {
 
   final Map<DashBoardView, Widget> screens = {
     DashBoardView.home: HomeScreen(),
-    DashBoardView.offerRide: OfferRideScreen(),
+    DashBoardView.offerRide: MyRidesScreen(),
     DashBoardView.requests: RideRequestsListScreen(),
   };
 
