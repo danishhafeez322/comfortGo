@@ -1,25 +1,19 @@
-import 'package:comfort_go/models/trip_model.dart';
+import 'package:comfort_go/models/ride_model.dart';
+import 'package:comfort_go/repositories/ride_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final RideRepository rideRepository = RideRepository();
 
   // search fields
   final pickupController = TextEditingController();
   final dropController = TextEditingController();
   final dateController = TextEditingController();
 
-  RxList<Trip> trips = <Trip>[].obs;
-  RxList<Trip> filteredTrips = <Trip>[].obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchTrips();
-  }
+  RxList<Ride> rides = <Ride>[].obs;
+  RxList<Ride> filteredRides = <Ride>[].obs;
 
   Future<void> pickDepartureDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -30,33 +24,50 @@ class HomeController extends GetxController {
     );
     if (picked != null) {
       dateController.text = DateFormat('MM-dd-yyyy').format(picked);
-      filterTrips();
+      filterTrips(rides);
     }
   }
 
-  Future<void> fetchTrips() async {
-    final snapshot = await _firestore.collection('trips').get();
-    trips.value = snapshot.docs
-        .map((doc) => Trip.fromJson(doc.data(), doc.id))
-        .toList();
-    filteredTrips.value = trips;
-  }
-
-  void filterTrips() {
+  RxList<Ride> filterTrips(List<Ride> trips) {
     String pickup = pickupController.text.trim().toLowerCase();
     String drop = dropController.text.trim().toLowerCase();
     String date = dateController.text.trim();
 
-    filteredTrips.value = trips.where((trip) {
+    filteredRides.value = trips.where((ride) {
       bool matchesPickup =
-          pickup.isEmpty || trip.pickupLocation.toLowerCase().contains(pickup);
+          pickup.isEmpty || ride.pickupLocation.toLowerCase().contains(pickup);
       bool matchesDrop =
-          drop.isEmpty || trip.dropLocation.toLowerCase().contains(drop);
+          drop.isEmpty || ride.dropLocation.toLowerCase().contains(drop);
       bool matchesDate =
           date.isEmpty ||
-          trip.departureTime.toIso8601String().split("T")[0] == date;
+          ride.departureTime.toIso8601String().split("T")[0] == date;
 
       return matchesPickup && matchesDrop && matchesDate;
     }).toList();
+    return filteredRides;
+  }
+
+  /// Reserve seat
+  Future<void> reserveSeat({
+    required String rideId,
+    required String userId,
+    required String userName,
+    required String userContact,
+    required int seatsReserved,
+  }) async {
+    await rideRepository.reserveSeat(
+      rideId: rideId,
+      userId: userId,
+      userName: userName,
+      userContact: userContact,
+      seatsReserved: seatsReserved,
+    );
+  }
+
+  void clearTextFields() {
+    pickupController.clear();
+    dropController.clear();
+    dateController.clear();
+    filterTrips(rides);
   }
 }

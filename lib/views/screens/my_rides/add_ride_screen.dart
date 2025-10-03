@@ -16,7 +16,8 @@ class AddRideScreen extends GetView<MyRideController> {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Offer a Ride")),
+      backgroundColor: AppColors.whiteColor,
+      appBar: AppBar(title: const Text("Add ride details")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -63,6 +64,12 @@ class AddRideScreen extends GetView<MyRideController> {
                 controller: controller.seatsCtrl,
                 inputType: TextInputType.number,
                 hintText: "Seats Available",
+              ),
+              vSpace(6),
+              CommonTextFieldWidget(
+                controller: controller.fareCtrl,
+                inputType: TextInputType.number,
+                hintText: "Fare per person",
               ),
               const SizedBox(height: 12),
               ExpandedButton(

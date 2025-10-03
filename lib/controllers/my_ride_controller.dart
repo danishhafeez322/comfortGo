@@ -16,6 +16,7 @@ class MyRideController extends GetxController {
   final pickupCtrl = TextEditingController();
   final dropCtrl = TextEditingController();
   final seatsCtrl = TextEditingController();
+  final fareCtrl = TextEditingController();
 
   DateTime? departureTime;
 
@@ -51,33 +52,6 @@ class MyRideController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 500)); // for indicator
   }
 
-  // Future<void> addRide({
-  //   required String name,
-  //   required String contactNumber,
-  //   required String vehicleModel,
-  //   required String vehicleColor,
-  //   required String vehicleYear,
-  //   required String pickupLocation,
-  //   required String dropLocation,
-  //   required DateTime departureTime,
-  //   required int seatsAvailable,
-  // }) async {
-  //   final uid = FirebaseAuth.instance.currentUser!.uid;
-  //   final ride = Ride(
-  //     id: '',
-  //     userId: uid,
-  //     name: name,
-  //     contactNumber: contactNumber,
-  //     vehicleModel: vehicleModel,
-  //     vehicleColor: vehicleColor,
-  //     vehicleYear: vehicleYear,
-  //     pickupLocation: pickupLocation,
-  //     dropLocation: dropLocation,
-  //     departureTime: departureTime,
-  //     seatsAvailable: seatsAvailable,
-  //   );
-  //   await _repo.addRide(ride);
-  // }
   Future<bool> addRide() async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -94,6 +68,7 @@ class MyRideController extends GetxController {
         dropLocation: dropCtrl.text.trim(),
         departureTime: departureTime ?? DateTime.now(),
         seatsAvailable: int.tryParse(seatsCtrl.text.trim()) ?? 1,
+        fare: fareCtrl.text.trim(),
       );
 
       await _repo.addRide(ride);
@@ -107,6 +82,31 @@ class MyRideController extends GetxController {
         backgroundColor: Colors.red,
       );
       return false;
+    }
+  }
+
+  Future<void> updateReservationStatus(
+    String rideId,
+    String userId,
+    String status,
+  ) async {
+    try {
+      await _repo.updateReservationStatus(rideId, userId, status);
+
+      // Update locally in myRides list
+      final rideIndex = myRides.indexWhere((r) => r.id == rideId);
+      if (rideIndex != -1) {
+        final reservationIndex = myRides[rideIndex].reservations.indexWhere(
+          (res) => res.userId == userId,
+        );
+
+        if (reservationIndex != -1) {
+          myRides[rideIndex].reservations[reservationIndex].status = status;
+          myRides.refresh();
+        }
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Could not update reservation: $e");
     }
   }
 

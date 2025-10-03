@@ -1,3 +1,4 @@
+import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/request_list_controller.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/utils/spacer.dart';
@@ -54,6 +55,12 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                   itemBuilder: (context, index) {
                     final request = controller.rideRequests[index];
                     return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 4,
+                      color: AppColors.cardBackground, // Use F9FAF9 Off-White
+                      shadowColor: AppColors.secondaryColor.withOpacity(0.3),
                       child: ListTile(
                         title: Text(
                           "${request.pickupLocation} → ${request.destination}",
