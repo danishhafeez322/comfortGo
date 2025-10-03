@@ -78,7 +78,6 @@ class HomeScreen extends GetView<HomeController> {
                 width: 0.34.sw,
                 height: ProfileSizes.searchButtonHeight(),
                 child: ExpandedButton(
-                  selected: true,
                   btnColor: AppColors.backButtonColors,
                   showBorder: true,
                   borderColor: AppColors.lightGrey,

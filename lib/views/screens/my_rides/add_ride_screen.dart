@@ -1,6 +1,12 @@
 import 'package:comfort_go/controllers/my_ride_controller.dart';
+import 'package:comfort_go/utils/app_sizes.dart';
+import 'package:comfort_go/utils/spacer.dart';
+import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
+import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../constants/app_colors.dart';
 
 class AddRideScreen extends GetView<MyRideController> {
   const AddRideScreen({super.key});
@@ -17,42 +23,50 @@ class AddRideScreen extends GetView<MyRideController> {
           key: formKey,
           child: ListView(
             children: [
-              TextFormField(
+              CommonTextFieldWidget(
                 controller: controller.nameCtrl,
-                decoration: const InputDecoration(labelText: "Name"),
+                hintText: "Name",
+                borderColor: AppColors.textFieldBorderColor,
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.contactCtrl,
-                decoration: const InputDecoration(labelText: "Contact Number"),
+                hintText: "Contact Number",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.modelCtrl,
-                decoration: const InputDecoration(labelText: "Vehicle Model"),
+                hintText: "Vehicle Model",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.colorCtrl,
-                decoration: const InputDecoration(labelText: "Vehicle Color"),
+                hintText: "Vehicle Color",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.yearCtrl,
-                decoration: const InputDecoration(labelText: "Vehicle Year"),
+                hintText: "Vehicle Year",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.pickupCtrl,
-                decoration: const InputDecoration(labelText: "Pickup Location"),
+                hintText: "Pickup Location",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.dropCtrl,
-                decoration: const InputDecoration(labelText: "Drop Location"),
+                hintText: "Drop Location",
               ),
-              TextFormField(
+              vSpace(6),
+              CommonTextFieldWidget(
                 controller: controller.seatsCtrl,
-                decoration: const InputDecoration(labelText: "Seats Available"),
-                keyboardType: TextInputType.number,
+                inputType: TextInputType.number,
+                hintText: "Seats Available",
               ),
               const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () async {
+              ExpandedButton(
+                onTap: () async {
                   if (formKey.currentState!.validate()) {
                     final success = await controller.addRide();
                     if (success) {
@@ -67,7 +81,13 @@ class AddRideScreen extends GetView<MyRideController> {
                     }
                   }
                 },
-                child: const Text("Add Ride"),
+                title: "Add Ride",
+                btnColor: AppColors.backButtonColors,
+                showBorder: true,
+                borderColor: AppColors.lightGrey,
+                btnTxtColor: AppColors.whiteColor,
+                txtSize: FontSizes.mediumFontSize(),
+                roundCorner: 10,
               ),
             ],
           ),

@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FabButton extends GetView<DashboardController> {
-  const FabButton({super.key});
+  final String? title;
+  final VoidCallback? onTap;
+  const FabButton({super.key, this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class FabButton extends GetView<DashboardController> {
       decoration: BoxDecoration(
         color: controller.isFabOpen.value
             ? AppColors.floatingButtonActiveColor
-            : AppColors.blueButtonColor,
+            : AppColors.backButtonColors,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -28,7 +30,7 @@ class FabButton extends GetView<DashboardController> {
         children: [
           FittedBox(
             child: Text(
-              AppStrings.addRideRequest,
+              title ?? AppStrings.addRideRequest,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -45,10 +47,11 @@ class FabButton extends GetView<DashboardController> {
         ],
       ),
     ).onTapWidget(
-      onTap: () {
-        // controller.toggleFab();
-        Get.toNamed(AppRoutes.addRideRequests);
-      },
+      onTap:
+          onTap ??
+          () {
+            Get.toNamed(AppRoutes.addRideRequests);
+          },
     );
   }
 }

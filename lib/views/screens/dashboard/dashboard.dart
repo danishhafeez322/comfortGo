@@ -1,4 +1,5 @@
 import 'package:comfort_go/constants/app_colors.dart';
+import 'package:comfort_go/constants/app_routes.dart';
 import 'package:comfort_go/constants/enums.dart';
 import 'package:comfort_go/controllers/dashboard_controller.dart';
 import 'package:comfort_go/extentions/common_extensions.dart';
@@ -51,8 +52,15 @@ class Dashboard extends GetView<DashboardController> {
 
         bottomNavigationBar: _BottomNavBar(),
         floatingActionButton: Obx(
-          () =>
-              controller.isOnRootScreen.value ? FabButton() : const SizedBox(),
+          () => controller.isOnRootScreen.value
+              ? FabButton()
+              : controller.currentView.value.name ==
+                    DashBoardView.offerRide.name
+              ? FabButton(
+                  title: "Offer a ride",
+                  onTap: () => Get.toNamed(AppRoutes.addRideScreen),
+                )
+              : const SizedBox(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       );

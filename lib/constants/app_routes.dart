@@ -4,9 +4,12 @@ import 'package:comfort_go/views/screens/dashboard/components/dashboard_binding.
 import 'package:comfort_go/views/screens/dashboard/dashboard.dart';
 import 'package:get/get.dart';
 
+import '../views/screens/my_rides/add_ride_screen.dart';
+
 class AppRoutes {
   static const String initial = '/';
   static const String addRideRequests = '/add-ride-requests';
+  static const String addRideScreen = '/add-ride-screen';
 
   static List<GetPage> routes = [
     GetPage(
@@ -19,5 +22,6 @@ class AppRoutes {
       page: () => AddRideRequestScreen(),
       binding: AddRideBinding(),
     ),
+    GetPage(name: addRideScreen, page: () => AddRideScreen()),
   ];
 }

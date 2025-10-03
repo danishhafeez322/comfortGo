@@ -1,6 +1,6 @@
 import 'package:comfort_go/constants/enums.dart';
 import 'package:comfort_go/views/screens/my_rides/my_ride_screen.dart';
-import 'package:comfort_go/views/screens/requests/request_screen.dart';
+import 'package:comfort_go/views/screens/requests/requested_ride_screen.dart';
 
 import '../../views/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class DashboardController extends GetxController {
   final Map<DashBoardView, Widget> screens = {
     DashBoardView.home: HomeScreen(),
     DashBoardView.offerRide: MyRidesScreen(),
-    DashBoardView.requests: RideRequestsListScreen(),
+    DashBoardView.requests: RequestedRidesScreen(),
   };
 
   void selectBottomTab(DashBoardView view) {

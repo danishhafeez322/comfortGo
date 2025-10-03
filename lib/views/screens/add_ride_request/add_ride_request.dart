@@ -1,8 +1,12 @@
 import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/ride_request_controller.dart';
+import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
+import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../../utils/app_sizes.dart';
 
 class AddRideRequestScreen extends GetView<RideRequestController> {
   const AddRideRequestScreen({super.key});
@@ -11,37 +15,39 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(title: const Text("Request a Ride")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.passengerNameController,
-                decoration: const InputDecoration(labelText: "Your Name"),
+                hintText: "Your Name",
               ),
               const SizedBox(height: 8),
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.contactController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(labelText: "Contact Number"),
+                inputType: TextInputType.phone,
+                hintText: "Contact Number",
               ),
               const SizedBox(height: 8),
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.pickupController,
-                decoration: const InputDecoration(labelText: "Pickup Location"),
+                hintText: "Pickup Location",
               ),
               const SizedBox(height: 8),
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.destinationController,
-                decoration: const InputDecoration(labelText: "Destination"),
+                hintText: "Destination",
               ),
+
               const SizedBox(height: 8),
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.dateController,
                 readOnly: true,
-                decoration: const InputDecoration(labelText: "Date & Time"),
+                hintText: "Date & Time",
                 onTap: () async {
                   DateTime? picked = await showDatePicker(
                     context: context,
@@ -63,26 +69,32 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
                         time.minute,
                       );
                       controller.dateController.text = DateFormat(
-                        "yyyy-MM-ddTHH:mm:ss",
+                        "dd/MM/yyyy HH:mm:ss",
                       ).format(fullDateTime);
                     }
                   }
                 },
               ),
               const SizedBox(height: 8),
-              TextField(
+              CommonTextFieldWidget(
                 controller: controller.seatsController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: "Seats Needed"),
+                inputType: TextInputType.number,
+                hintText: "Seats Needed",
               ),
               const SizedBox(height: 20),
 
               Obx(
                 () => controller.isLoading.value
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: controller.submitRideRequest,
-                        child: const Text("Submit Request"),
+                    : ExpandedButton(
+                        btnColor: AppColors.backButtonColors,
+                        showBorder: true,
+                        borderColor: AppColors.lightGrey,
+                        btnTxtColor: AppColors.whiteColor,
+                        txtSize: FontSizes.mediumFontSize(),
+                        roundCorner: 10,
+                        onTap: controller.submitRideRequest,
+                        title: "Submit Request",
                       ),
               ),
             ],

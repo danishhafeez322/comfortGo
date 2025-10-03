@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ExpandedButton extends StatelessWidget {
   final Widget? prefix;
   final Widget? suffix;
-  final bool? selected;
   final bool? disabled;
   final String? title;
   final Widget? titleWidget;
@@ -31,7 +30,6 @@ class ExpandedButton extends StatelessWidget {
   const ExpandedButton({
     super.key,
     this.prefix,
-    required this.selected,
     this.disabled,
     required this.onTap,
     required this.title,
@@ -84,10 +82,8 @@ class ExpandedButton extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding.w),
             decoration: BoxDecoration(
-              color: selected!
-                  ? (btnColor ?? AppColors.secondaryColor)
-                  : btnColor?.withValues(alpha: 0.4) ?? AppColors.greyColor,
-              gradient: selected! ? btnGradientColor : null,
+              color: btnColor ?? AppColors.secondaryColor,
+              gradient: btnGradientColor ?? null,
               border: showBorder
                   ? Border.all(
                       color: borderColor ?? AppColors.lightBackgroundColor,

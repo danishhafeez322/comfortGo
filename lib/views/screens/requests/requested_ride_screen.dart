@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RideRequestsListScreen extends GetView<RideRequestListController> {
-  const RideRequestsListScreen({super.key});
+class RequestedRidesScreen extends GetView<RideRequestListController> {
+  const RequestedRidesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
