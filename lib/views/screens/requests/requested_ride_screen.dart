@@ -48,7 +48,7 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                       child: ListView(
                         children: const [
                           SizedBox(
-                            height: 500,
+                            height: 520,
                             child: Center(child: Text("No requests found")),
                           ),
                         ],

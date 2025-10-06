@@ -39,12 +39,22 @@ class HomeScreen extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               vSpace(0.044.sh),
-              Text(
-                "Find a Trip",
-                style: TextStyle(
-                  fontSize: FontSizes.largeFontSize(),
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Find a Trip",
+                    style: TextStyle(
+                      fontSize: FontSizes.largeFontSize(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Icon(
+                    Icons.notifications,
+                    size: AppWidgetSizes.mediumIconSize(),
+                    color: AppColors.backButtonColors,
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 

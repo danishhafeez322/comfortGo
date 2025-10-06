@@ -46,7 +46,7 @@ class MyRidesScreen extends GetView<MyRideController> {
                       child: ListView(
                         children: const [
                           SizedBox(
-                            height: 300,
+                            height: 500,
                             child: Center(child: Text("No rides offered yet.")),
                           ),
                         ],
@@ -85,6 +85,45 @@ class MyRidesScreen extends GetView<MyRideController> {
                               "${ride.departureTime.hour}:${ride.departureTime.minute}",
                             ),
                             children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    label: const Text("Edit"),
+                                    onPressed: () {
+                                      controller.editRide(ride.id, {
+                                        "fare": "1500", // example update
+                                        "seatsAvailable": 3,
+                                      });
+                                    },
+                                  ),
+                                  TextButton.icon(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    label: const Text("Delete"),
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        title: "Delete Ride",
+                                        middleText:
+                                            "Are you sure you want to delete this ride?",
+                                        textConfirm: "Yes",
+                                        textCancel: "No",
+                                        confirmTextColor: Colors.white,
+                                        onConfirm: () {
+                                          controller.deleteRide(ride.id);
+                                          Get.back();
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                               if (ride.reservations.isEmpty)
                                 const Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -92,12 +131,17 @@ class MyRidesScreen extends GetView<MyRideController> {
                                 )
                               else
                                 Column(
-                                  children: ride.reservations.map((
-                                    reservation,
+                                  children: ride.reservations.asMap().entries.map((
+                                    entry,
                                   ) {
+                                    final index = entry.key;
+                                    final reservation = entry.value;
+
                                     return ListTile(
+                                      leading: const Icon(Icons.person),
                                       title: Text(reservation.userName),
                                       subtitle: Text(
+                                        "Contact: ${reservation.userContact}\n"
                                         "Seats reserved: ${reservation.seatsReserved}",
                                       ),
                                       trailing: reservation.status == "pending"
@@ -109,28 +153,26 @@ class MyRidesScreen extends GetView<MyRideController> {
                                                     Icons.check,
                                                     color: Colors.green,
                                                   ),
-                                                  onPressed: () {
-                                                    controller
-                                                        .updateReservationStatus(
-                                                          ride.id,
-                                                          reservation.userId,
-                                                          "accepted",
-                                                        );
-                                                  },
+                                                  onPressed: () => controller
+                                                      .updateReservationStatus(
+                                                        ride.id,
+                                                        reservation.userId,
+                                                        "accepted",
+                                                        index,
+                                                      ),
                                                 ),
                                                 IconButton(
                                                   icon: const Icon(
                                                     Icons.close,
                                                     color: Colors.red,
                                                   ),
-                                                  onPressed: () {
-                                                    controller
-                                                        .updateReservationStatus(
-                                                          ride.id,
-                                                          reservation.userId,
-                                                          "rejected",
-                                                        );
-                                                  },
+                                                  onPressed: () => controller
+                                                      .updateReservationStatus(
+                                                        ride.id,
+                                                        reservation.userId,
+                                                        "rejected",
+                                                        index,
+                                                      ),
                                                 ),
                                               ],
                                             )

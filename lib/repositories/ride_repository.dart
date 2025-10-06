@@ -34,14 +34,14 @@ class RideRepository {
           for (var d in snap.docs) {
             final rideData = d.data();
 
-            // get reservations subcollection
-            final reservationsSnap = await d.reference
-                .collection("reservations")
-                .get();
-
-            final reservations = reservationsSnap.docs
-                .map((r) => Reservation.fromJson(r.data()..['userId'] = r.id))
-                .toList();
+            // ✅ reservations are inline inside rideData
+            final reservations =
+                (rideData['reservations'] as List<dynamic>? ?? [])
+                    .map(
+                      (res) =>
+                          Reservation.fromJson(Map<String, dynamic>.from(res)),
+                    )
+                    .toList();
 
             rides.add(
               Ride.fromMap(rideData, d.id).copyWith(reservations: reservations),
@@ -56,13 +56,60 @@ class RideRepository {
     String rideId,
     String userId,
     String status,
+    int listindex,
   ) async {
-    await _db
-        .collection("rides")
-        .doc(rideId)
-        .collection("reservations")
-        .doc(userId)
-        .update({"status": status});
+    try {
+      final rideRef = _db.collection("rides").doc(rideId);
+
+      await _db.runTransaction((txn) async {
+        final snapshot = await txn.get(rideRef);
+
+        if (!snapshot.exists) {
+          throw Exception("Ride not found");
+        }
+
+        final rideData = snapshot.data()!;
+        final reservations = List<Map<String, dynamic>>.from(
+          rideData['reservations'] ?? [],
+        );
+
+        // 🔍 Find the reservation
+        var index = reservations.indexWhere((r) => r['userId'] == userId);
+        if (index == -1) {
+          throw Exception("Reservation not found for this user");
+        }
+        index = listindex;
+
+        // final currentStatus = (reservations[index]['status'] ?? '').toString();
+
+        // ✏️ Update reservation status
+        reservations[index]['status'] = status;
+
+        int seatsAvailable = (rideData['seatsAvailable'] ?? 0) as int;
+
+        // 🎯 If reservation was previously pending/accepted and now rejected → restore seats
+        if (status == 'rejected') {
+          final reservedSeats =
+              (reservations[index]['seatsReserved'] ?? 1) as int;
+          seatsAvailable += reservedSeats;
+        }
+
+        // ✅ Save updated array and seat count
+        txn.update(rideRef, {
+          "reservations": reservations,
+          "seatsAvailable": seatsAvailable,
+          "status": status,
+        });
+      });
+
+      print("✅ Reservation status updated successfully for user $userId");
+    } on FirebaseException catch (e) {
+      print("❌ Firebase error while updating reservation: ${e.message}");
+      rethrow;
+    } catch (e) {
+      print("❌ Unexpected error while updating reservation: $e");
+      rethrow;
+    }
   }
 
   /// Reserve seat for a ride
@@ -102,5 +149,23 @@ class RideRepository {
 
       txn.update(rideRef, {'reservations': reservations});
     });
+  }
+
+  // ✅ Delete a ride
+  Future<void> deleteRide(String rideId) async {
+    try {
+      await _db.collection("rides").doc(rideId).delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // ✅ Update ride details
+  Future<void> updateRide(String rideId, Map<String, dynamic> updates) async {
+    try {
+      await _db.collection("rides").doc(rideId).update(updates);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

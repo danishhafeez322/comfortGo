@@ -27,15 +27,15 @@ class MyRideController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchAllRides();
+    // fetchAllRides();
     fetchMyRides();
   }
 
-  void fetchAllRides() {
-    _repo.getAllRides().listen((data) {
-      rides.value = data;
-    });
-  }
+  // void fetchAllRides() {
+  //   _repo.getAllRides().listen((data) {
+  //     rides.value = data;
+  //   });
+  // }
 
   Future<void> fetchMyRides() async {
     _repo.getMyRides().listen((data) {
@@ -89,9 +89,10 @@ class MyRideController extends GetxController {
     String rideId,
     String userId,
     String status,
+    int index,
   ) async {
     try {
-      await _repo.updateReservationStatus(rideId, userId, status);
+      await _repo.updateReservationStatus(rideId, userId, status, index);
 
       // Update locally in myRides list
       final rideIndex = myRides.indexWhere((r) => r.id == rideId);
@@ -110,6 +111,44 @@ class MyRideController extends GetxController {
     }
   }
 
+  // ✅ Delete ride
+  Future<void> deleteRide(String rideId) async {
+    try {
+      await _repo.deleteRide(rideId);
+      Get.snackbar(
+        "Deleted",
+        "Ride deleted successfully",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // ✅ Edit ride details
+  Future<void> editRide(String rideId, Map<String, dynamic> updates) async {
+    try {
+      await _repo.updateRide(rideId, updates);
+      Get.snackbar(
+        "Updated",
+        "Ride updated successfully",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   void clearForm() {
     nameCtrl.clear();
     contactCtrl.clear();
@@ -120,6 +159,7 @@ class MyRideController extends GetxController {
     dropCtrl.clear();
     seatsCtrl.clear();
     departureTime = null;
+    fareCtrl.clear();
   }
 
   @override

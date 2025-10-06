@@ -100,7 +100,9 @@ class HomeController extends GetxController {
         userContact: contact,
         seatsReserved: seats,
       );
-
+      nameCtrl.clear();
+      contactCtrl.clear();
+      numberOfSeatsCtrl.clear();
       Get.back();
       Get.snackbar("Success", "Seat reserved successfully");
     } catch (e) {
