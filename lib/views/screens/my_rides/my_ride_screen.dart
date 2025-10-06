@@ -25,7 +25,7 @@ class MyRidesScreen extends GetView<MyRideController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              vSpace(0.05.sh),
+              vSpace(0.044.sh),
               Text(
                 "My Offered Rides",
                 style: TextStyle(

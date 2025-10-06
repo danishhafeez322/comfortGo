@@ -17,7 +17,7 @@ class Dashboard extends GetView<DashboardController> {
     return Obx(() {
       final controller = Get.find<DashboardController>();
       return Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.whiteColor,
         body: Stack(
           children: [

@@ -6,6 +6,7 @@ import 'package:comfort_go/models/ride_model.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/utils/spacer.dart';
 import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
+import 'package:comfort_go/views/widgets/common_widgets/custom_bg_paint.dart';
 import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,12 +20,25 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.rotationX(
+              3.14159,
+            ), // flip vertically (pi radians)
+            child: CustomPaint(
+              size: Size(double.infinity, 240), // give it height
+              painter: BackgroundPainter(),
+            ),
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
+              vSpace(0.044.sh),
               Text(
                 "Find a Trip",
                 style: TextStyle(
