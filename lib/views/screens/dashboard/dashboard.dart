@@ -19,35 +19,37 @@ class Dashboard extends GetView<DashboardController> {
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.whiteColor,
-        body: Stack(
-          children: [
-            IndexedStack(
-              index: controller.currentView.value.index,
-              children: DashBoardView.values
-                  .map((view) => controller.screens[view]!)
-                  .toList(),
-            ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              IndexedStack(
+                index: controller.currentView.value.index,
+                children: DashBoardView.values
+                    .map((view) => controller.screens[view]!)
+                    .toList(),
+              ),
 
-            // Blur overlay when FAB menu is open
-            // if (controller.isFabOpen.value)
-            //   Positioned.fill(
-            //     child: BackdropFilter(
-            //       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-            //       child:
-            //           Container(
-            //             color: Colors.white.withAlpha(
-            //               165,
-            //             ), // Optional: dim effect
-            //           ).onTapWidget(
-            //             onTap: () {
-            //               controller.isFabOpen.value = false;
-            //             },
-            //           ),
-            //     ),
-            //   ),
-            // FAB Menu Overlay
-            // if (controller.isFabOpen.value) const PositionedFABMenu(),
-          ],
+              // Blur overlay when FAB menu is open
+              // if (controller.isFabOpen.value)
+              //   Positioned.fill(
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              //       child:
+              //           Container(
+              //             color: Colors.white.withAlpha(
+              //               165,
+              //             ), // Optional: dim effect
+              //           ).onTapWidget(
+              //             onTap: () {
+              //               controller.isFabOpen.value = false;
+              //             },
+              //           ),
+              //     ),
+              //   ),
+              // FAB Menu Overlay
+              // if (controller.isFabOpen.value) const PositionedFABMenu(),
+            ],
+          ),
         ),
 
         bottomNavigationBar: _BottomNavBar(),

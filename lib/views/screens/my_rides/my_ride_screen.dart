@@ -25,7 +25,7 @@ class MyRidesScreen extends GetView<MyRideController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              vSpace(0.044.sh),
+              vSpace(0.01.sh),
               Text(
                 "My Offered Rides",
                 style: TextStyle(
@@ -46,7 +46,7 @@ class MyRidesScreen extends GetView<MyRideController> {
                       child: ListView(
                         children: const [
                           SizedBox(
-                            height: 500,
+                            height: 600,
                             child: Center(child: Text("No rides offered yet.")),
                           ),
                         ],

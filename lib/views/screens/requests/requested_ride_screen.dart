@@ -26,7 +26,7 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              vSpace(0.05.sh),
+              vSpace(0.01.sh),
               Text(
                 "Ride Requests",
                 style: TextStyle(
@@ -48,7 +48,7 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                       child: ListView(
                         children: const [
                           SizedBox(
-                            height: 520,
+                            height: 600,
                             child: Center(child: Text("No requests found")),
                           ),
                         ],

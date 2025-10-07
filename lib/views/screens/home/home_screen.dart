@@ -38,7 +38,7 @@ class HomeScreen extends GetView<HomeController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              vSpace(0.044.sh),
+              vSpace(0.01.sh),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

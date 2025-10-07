@@ -172,6 +172,7 @@ class MyRideController extends GetxController {
     pickupCtrl.dispose();
     dropCtrl.dispose();
     seatsCtrl.dispose();
+    fareCtrl.dispose();
     super.onClose();
   }
 }
