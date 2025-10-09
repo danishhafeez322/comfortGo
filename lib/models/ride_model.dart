@@ -10,6 +10,7 @@ class Ride {
   final String vehicleYear;
   final String pickupLocation;
   final String dropLocation;
+  final List<String> stops; // 🆕 Added stops
   final DateTime departureTime;
   final int seatsAvailable;
   final List<Reservation> reservations;
@@ -28,6 +29,7 @@ class Ride {
     required this.departureTime,
     required this.seatsAvailable,
     required this.fare,
+    this.stops = const [], // 🆕 Default empty
     this.reservations = const [],
   });
 
@@ -41,8 +43,11 @@ class Ride {
       vehicleColor: map['vehicleColor'] ?? '',
       vehicleYear: map['vehicleYear'] ?? '',
       pickupLocation: map['pickupLocation'] ?? '',
-      fare: map['fare'] ?? '',
       dropLocation: map['dropLocation'] ?? '',
+      fare: map['fare'] ?? '',
+      stops:
+          (map['stops'] as List?)?.map((e) => e.toString()).toList() ??
+          [], // 🆕 Handle stops safely
       departureTime: (map['departureTime'] is Timestamp)
           ? (map['departureTime'] as Timestamp).toDate()
           : DateTime.tryParse(map['departureTime'].toString()) ??
@@ -66,20 +71,19 @@ class Ride {
       'vehicleYear': vehicleYear,
       'pickupLocation': pickupLocation,
       'dropLocation': dropLocation,
+      'stops': stops, // 🆕 Added to Firestore map
       'departureTime': Timestamp.fromDate(departureTime),
       'seatsAvailable': seatsAvailable,
       'fare': fare,
       'createdAt': FieldValue.serverTimestamp(),
-      // store reservations inline only if needed
       'reservations': reservations.map((r) => r.toJson()).toList(),
     };
   }
 
-  Ride copyWith({List<Reservation>? reservations}) {
+  Ride copyWith({List<Reservation>? reservations, List<String>? stops}) {
     return Ride(
       id: id,
       userId: userId,
-      fare: fare,
       name: name,
       contactNumber: contactNumber,
       vehicleModel: vehicleModel,
@@ -87,8 +91,10 @@ class Ride {
       vehicleYear: vehicleYear,
       pickupLocation: pickupLocation,
       dropLocation: dropLocation,
+      fare: fare,
       departureTime: departureTime,
       seatsAvailable: seatsAvailable,
+      stops: stops ?? this.stops, // 🆕 Preserve or replace stops
       reservations: reservations ?? this.reservations,
     );
   }

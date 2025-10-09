@@ -1,4 +1,4 @@
-class RideRequest {
+class RideRequestModel {
   final String id;
   final String passengerName;
   final String contactNumber;
@@ -10,7 +10,7 @@ class RideRequest {
   final bool isCompleted;
   final String ownerId;
 
-  RideRequest({
+  RideRequestModel({
     required this.id,
     required this.passengerName,
     required this.contactNumber,
@@ -37,8 +37,8 @@ class RideRequest {
     };
   }
 
-  factory RideRequest.fromJson(Map<String, dynamic> json, String id) {
-    return RideRequest(
+  factory RideRequestModel.fromJson(Map<String, dynamic> json, String id) {
+    return RideRequestModel(
       id: id,
       passengerName: json["passengerName"] ?? "",
       contactNumber: json["contactNumber"] ?? "",

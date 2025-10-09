@@ -2,7 +2,7 @@ import 'package:comfort_go/controllers/request_list_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/ride_request.dart';
+import '../models/ride_request_model.dart';
 import '../repositories/firebase_repository.dart';
 
 class RideRequestController extends GetxController {
@@ -40,7 +40,7 @@ class RideRequestController extends GetxController {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      final request = RideRequest(
+      final request = RideRequestModel(
         id: "",
         passengerName: passengerNameController.text,
         contactNumber: contactController.text,

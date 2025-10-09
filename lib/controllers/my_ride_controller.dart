@@ -17,6 +17,8 @@ class MyRideController extends GetxController {
   final dropCtrl = TextEditingController();
   final seatsCtrl = TextEditingController();
   final fareCtrl = TextEditingController();
+  final departureTimeCtrl = TextEditingController();
+  final stopControllers = <TextEditingController>[].obs;
 
   DateTime? departureTime;
 
@@ -43,9 +45,23 @@ class MyRideController extends GetxController {
     });
   }
 
-  // Future<void> fetchMyRides() async {
-  //   myRides.value = await ridesRepo.getMyRides();
-  // }
+  void addStopField() {
+    stopControllers.add(TextEditingController());
+  }
+
+  void removeStopField(int index) {
+    stopControllers.removeAt(index);
+  }
+
+  Future<void> pickDepartureTime(BuildContext context) async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (time != null) {
+      departureTimeCtrl.text = time.format(context);
+    }
+  }
 
   Future<void> refreshMyRides() async {
     fetchMyRides();
@@ -55,7 +71,30 @@ class MyRideController extends GetxController {
   Future<bool> addRide() async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
-
+      // ✅ Collect stops (ignore empty fields)
+      final stops = stopControllers
+          .map((ctrl) => ctrl.text.trim())
+          .where((stop) => stop.isNotEmpty)
+          .toList();
+      DateTime departureDateTime = DateTime.now();
+      if (departureTimeCtrl.text.isNotEmpty) {
+        try {
+          final now = DateTime.now();
+          final timeParts = departureTimeCtrl.text.split(':');
+          final hour = int.parse(timeParts[0]);
+          final minute = int.parse(timeParts[1].split(' ')[0]);
+          final isPM = departureTimeCtrl.text.toLowerCase().contains('pm');
+          departureDateTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            isPM && hour < 12 ? hour + 12 : hour,
+            minute,
+          );
+        } catch (e) {
+          debugPrint("Failed to parse departure time: $e");
+        }
+      }
       final ride = Ride(
         id: '', // Firestore will assign one; you can overwrite after add
         userId: uid,
@@ -66,7 +105,8 @@ class MyRideController extends GetxController {
         vehicleYear: yearCtrl.text.trim(),
         pickupLocation: pickupCtrl.text.trim(),
         dropLocation: dropCtrl.text.trim(),
-        departureTime: departureTime ?? DateTime.now(),
+        stops: stops, // 🆕 Added stops
+        departureTime: departureDateTime,
         seatsAvailable: int.tryParse(seatsCtrl.text.trim()) ?? 1,
         fare: fareCtrl.text.trim(),
       );

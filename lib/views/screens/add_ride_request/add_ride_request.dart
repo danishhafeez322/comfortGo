@@ -1,5 +1,6 @@
 import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/ride_request_controller.dart';
+import 'package:comfort_go/extentions/on_tap_extension.dart';
 import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
 import 'package:comfort_go/views/widgets/common_widgets/custom_bg_paint.dart';
 import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.dart';
@@ -41,12 +42,21 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   vSpace(0.044.sh),
-                  Text(
-                    "Request a Ride",
-                    style: TextStyle(
-                      fontSize: FontSizes.largeFontSize(),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_back_ios,
+                        size: AppWidgetSizes.mediumIconSize(),
+                      ).onTapWidget(onTap: Get.back),
+                      hSpace(5),
+                      Text(
+                        "Request a Ride",
+                        style: TextStyle(
+                          fontSize: FontSizes.largeFontSize(),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   vSpace(0.012.sh),
                   CommonTextFieldWidget(

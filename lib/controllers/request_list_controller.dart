@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import '../models/ride_request.dart';
+import '../models/ride_request_model.dart';
 import '../repositories/firebase_repository.dart';
 
 class RideRequestListController extends GetxController {
   final FirebaseRepository _repository = FirebaseRepository();
 
-  RxList<RideRequest> rideRequests = <RideRequest>[].obs;
+  RxList<RideRequestModel> rideRequests = <RideRequestModel>[].obs;
   RxBool isLoading = false.obs;
 
   @override
