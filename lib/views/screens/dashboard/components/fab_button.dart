@@ -1,7 +1,5 @@
 import 'package:comfort_go/constants/app_routes.dart';
 import 'package:comfort_go/extentions/on_tap_extension.dart';
-import 'package:comfort_go/utils/spacer.dart';
-
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/app_strings.dart';
 import '../../../../controllers/dashboard_controller.dart';
@@ -37,12 +35,6 @@ class FabButton extends GetView<DashboardController> {
                 fontSize: FontSizes.smallFontSize(),
               ),
             ),
-          ),
-          hSpace(5),
-          Icon(
-            Icons.add,
-            color: Colors.white,
-            size: AppWidgetSizes.smallIconSize(),
           ),
         ],
       ),

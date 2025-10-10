@@ -55,7 +55,6 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                       ),
                     );
                   }
-
                   return RefreshIndicator(
                     onRefresh: controller.fetchRideRequests,
                     child: ListView.builder(
