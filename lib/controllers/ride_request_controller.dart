@@ -2,6 +2,7 @@ import 'package:comfort_go/controllers/request_list_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../models/ride_request_model.dart';
 import '../repositories/firebase_repository.dart';
 
@@ -47,7 +48,7 @@ class RideRequestController extends GetxController {
         pickupLocation: pickupController.text,
         isCompleted: false,
         destination: destinationController.text,
-        time: DateTime.parse(dateController.text),
+        time: selectedDateTime ?? DateTime.now(),
         seatsNeeded: int.tryParse(seatsController.text) ?? 1,
         createdAt: DateTime.now(),
         ownerId: uid,
@@ -61,6 +62,39 @@ class RideRequestController extends GetxController {
       Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  DateTime? selectedDateTime;
+
+  Future<void> pickDepartureDate(BuildContext context) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+
+    if (date != null) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (time != null) {
+        selectedDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.minute,
+        );
+
+        // show nicely formatted string in the text field
+        dateController.text = DateFormat(
+          'dd/MM/yyyy hh:mm a',
+        ).format(selectedDateTime!);
+      }
     }
   }
 }

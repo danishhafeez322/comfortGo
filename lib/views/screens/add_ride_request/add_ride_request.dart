@@ -7,8 +7,6 @@ import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.d
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-
 import '../../../utils/app_sizes.dart';
 import '../../../utils/spacer.dart';
 
@@ -41,7 +39,7 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  vSpace(0.044.sh),
+                  vSpace(0.024.sh),
                   Row(
                     children: [
                       Icon(
@@ -85,32 +83,7 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
                     controller: controller.dateController,
                     readOnly: true,
                     hintText: "Date & Time",
-                    onTap: () async {
-                      DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                      );
-                      if (picked != null) {
-                        TimeOfDay? time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        if (time != null) {
-                          final fullDateTime = DateTime(
-                            picked.year,
-                            picked.month,
-                            picked.day,
-                            time.hour,
-                            time.minute,
-                          );
-                          controller.dateController.text = DateFormat(
-                            "dd/MM/yyyy HH:mm:ss",
-                          ).format(fullDateTime);
-                        }
-                      }
-                    },
+                    onTap: () => controller.pickDepartureDate(context),
                   ),
                   const SizedBox(height: 8),
                   CommonTextFieldWidget(

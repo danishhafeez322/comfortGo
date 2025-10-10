@@ -2,6 +2,7 @@ import 'package:comfort_go/views/screens/add_ride_request/add_ride_binding.dart'
 import 'package:comfort_go/views/screens/add_ride_request/add_ride_request.dart';
 import 'package:comfort_go/views/screens/dashboard/components/dashboard_binding.dart';
 import 'package:comfort_go/views/screens/dashboard/dashboard.dart';
+import 'package:comfort_go/views/screens/my_rides/add_my_ride_binding.dart';
 import 'package:comfort_go/views/screens/trip_details/trip_details_binding.dart';
 import 'package:comfort_go/views/screens/trip_details/trip_details_screen.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,11 @@ class AppRoutes {
       page: () => AddRideRequestScreen(),
       binding: AddRideBinding(),
     ),
-    GetPage(name: addRideScreen, page: () => AddRideScreen()),
+    GetPage(
+      name: addRideScreen,
+      page: () => AddRideScreen(),
+      binding: AddMyRideBinding(),
+    ),
     GetPage(
       name: tripDetails,
       page: () => TripDetailScreen(),

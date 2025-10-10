@@ -1,4 +1,4 @@
-import 'package:comfort_go/controllers/my_ride_controller.dart';
+import 'package:comfort_go/controllers/add_my_ride_controller.dart';
 import 'package:comfort_go/extentions/on_tap_extension.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/utils/spacer.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../constants/app_colors.dart';
 
-class AddRideScreen extends GetView<MyRideController> {
+class AddRideScreen extends GetView<AddMyRideController> {
   const AddRideScreen({super.key});
 
   @override
@@ -183,7 +183,7 @@ class AddRideScreen extends GetView<MyRideController> {
                           if (formKey.currentState!.validate()) {
                             final success = await controller.addRide();
                             if (success) {
-                              await controller.fetchMyRides();
+                              await controller.myRideController.fetchMyRides();
                               Get.back();
                               Get.snackbar(
                                 "Success",
