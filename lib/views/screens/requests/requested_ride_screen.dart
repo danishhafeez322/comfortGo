@@ -12,15 +12,15 @@ import 'package:intl/intl.dart';
 class RequestedRidesScreen extends GetView<RideRequestListController> {
   const RequestedRidesScreen({super.key});
 
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('dd MMM yyyy, hh:mm a').format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned.fill(
-          child: CustomPaint(
-            painter: BackgroundPainter(), // Your custom background
-          ),
-        ),
+        Positioned.fill(child: CustomPaint(painter: BackgroundPainter())),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Column(
@@ -34,7 +34,7 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
 
               /// Pull-to-refresh section
               Expanded(
@@ -42,6 +42,7 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                   if (controller.isLoading.value) {
                     return const Center(child: CircularProgressIndicator());
                   }
+
                   if (controller.rideRequests.isEmpty) {
                     return RefreshIndicator(
                       onRefresh: controller.fetchRideRequests,
@@ -49,66 +50,230 @@ class RequestedRidesScreen extends GetView<RideRequestListController> {
                         children: const [
                           SizedBox(
                             height: 600,
-                            child: Center(child: Text("No requests found")),
+                            child: Center(
+                              child: Text(
+                                "No requests found.",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     );
                   }
+
                   return RefreshIndicator(
                     onRefresh: controller.fetchRideRequests,
                     child: ListView.builder(
                       itemCount: controller.rideRequests.length,
                       itemBuilder: (context, index) {
                         final request = controller.rideRequests[index];
+                        final isOwner =
+                            request.ownerId ==
+                            FirebaseAuth.instance.currentUser?.uid;
+
                         return Card(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 4,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          elevation: 4,
-                          color:
-                              AppColors.cardBackground, // Use F9FAF9 Off-White
+                          elevation: 3,
+                          color: AppColors.cardBackground,
                           shadowColor: AppColors.secondaryColor.withOpacity(
-                            0.3,
+                            0.25,
                           ),
-                          child: ListTile(
-                            title: Text(
-                              "${request.pickupLocation} → ${request.destination}",
-                            ),
-                            subtitle: Column(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Passenger: ${request.passengerName}"),
-                                Text("Seats Needed: ${request.seatsNeeded}"),
-                                Text(
-                                  "Time: ${DateFormat('dd MMM, hh:mm a').format(request.time)}",
+                                // 🔹 Route header
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.route,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    hSpace(8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${request.pickupLocation} → ${request.destination}",
+                                            style: TextStyle(
+                                              fontSize:
+                                                  FontSizes.mediumFontSize(),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          vSpace(2),
+                                          Text(
+                                            "Departure: ${formatDateTime(request.time)}",
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                if (!request.isCompleted)
-                                  Text("Contact: ${request.contactNumber}"),
-                                if (request.isCompleted)
-                                  const Text(
-                                    "✅ Completed",
-                                    style: TextStyle(color: Colors.green),
+
+                                vSpace(10),
+
+                                // 🔹 Passenger Info Card
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
                                   ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Icon(
+                                        Icons.person_outline,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      hSpace(8),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              request.passengerName,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            vSpace(2),
+                                            Text(
+                                              "Seats Needed: ${request.seatsNeeded}",
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                            if (!request.isCompleted)
+                                              Text(
+                                                "Contact: ${request.contactNumber}",
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                vSpace(10),
+
+                                // 🔹 Status or Action
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (request.isCompleted)
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.shade100,
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle,
+                                              size: 18,
+                                              color: Colors.green,
+                                            ),
+                                            SizedBox(width: 6),
+                                            Text(
+                                              "Completed",
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    else
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.orange.shade100,
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            Icon(
+                                              Icons.pending,
+                                              size: 18,
+                                              color: Colors.orangeAccent,
+                                            ),
+                                            SizedBox(width: 6),
+                                            Text(
+                                              "Pending",
+                                              style: TextStyle(
+                                                color: Colors.orangeAccent,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                    // ✅ Complete Button for Owner
+                                    if (!request.isCompleted && isOwner)
+                                      ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                        onPressed: () => controller
+                                            .markCompleted(request.id),
+                                        icon: const Icon(Icons.check),
+                                        label: const Text("Mark Complete"),
+                                      ),
+                                  ],
+                                ),
                               ],
                             ),
-                            trailing:
-                                (!request.isCompleted &&
-                                    request.ownerId ==
-                                        FirebaseAuth
-                                            .instance
-                                            .currentUser
-                                            ?.uid) // ✅ only owner
-                                ? IconButton(
-                                    icon: const Icon(
-                                      Icons.check,
-                                      color: Colors.green,
-                                    ),
-                                    onPressed: () {
-                                      controller.markCompleted(request.id);
-                                    },
-                                  )
-                                : null,
                           ),
                         );
                       },

@@ -1,6 +1,5 @@
 import 'package:comfort_go/constants/app_colors.dart';
 import 'package:comfort_go/controllers/home_controller.dart';
-import 'package:comfort_go/models/ride_model.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
 import 'package:comfort_go/utils/spacer.dart';
 import 'package:comfort_go/views/widgets/buttons/custom_button.dart';
@@ -16,6 +15,23 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
+
+    /// Load initial rides when the screen is first shown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.rides.isEmpty) {
+        controller.fetchInitialRides();
+      }
+
+      /// Pagination listener
+      scrollController.addListener(() {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200) {
+          controller.loadMoreRides();
+        }
+      });
+    });
+
     return Stack(
       children: [
         Align(
@@ -111,35 +127,33 @@ class HomeScreen extends GetView<HomeController> {
               ),
               const SizedBox(height: 16),
 
-              /// Trip List
+              /// Trip List (real-time updates)
               Expanded(
-                child: StreamBuilder<List<Ride>>(
-                  stream: controller.rideRepository.getAllRides(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
-                    }
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text("No trips available"));
-                    }
+                child: Obx(() {
+                  final rides = controller.filteredRides;
 
-                    controller.rides.value = snapshot.data!;
-                    controller.filterRides(controller.rides);
+                  if (rides.isEmpty) {
+                    return const Center(child: Text("No trips found"));
+                  }
 
-                    return Obx(() {
-                      if (controller.filteredRides.isEmpty) {
-                        return const Center(
-                          child: Text("No trips found for your search"),
-                        );
-                      }
-                      return RideListView(rides: controller.filteredRides);
-                    });
-                  },
-                ),
+                  return RideListView(
+                    rides: rides,
+                    scrollController: scrollController,
+                  );
+                }),
               ),
+
+              /// Loading more indicator
+              Obx(() {
+                return controller.isLoadingMore.value
+                    ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
             ],
           ),
         ),

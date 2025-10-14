@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comfort_go/models/ride_model.dart';
 import 'package:comfort_go/repositories/ride_repository.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   final RideRepository rideRepository = RideRepository();
 
   // search fields
@@ -12,13 +15,41 @@ class HomeController extends GetxController {
   final dropController = TextEditingController();
   final dateController = TextEditingController();
 
-  ///trip details
-  final nameCtrl = TextEditingController();
-  final contactCtrl = TextEditingController();
-  final numberOfSeatsCtrl = TextEditingController();
-
   RxList<Ride> rides = <Ride>[].obs;
   RxList<Ride> filteredRides = <Ride>[].obs;
+
+  /// loading states
+  RxBool isLoading = false.obs;
+  RxBool isLoadingMore = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _deleteExpiredRides();
+    listenToRides();
+  }
+
+  void listenToRides() {
+    _firestore
+        .collection('rides')
+        .orderBy('departureTime', descending: false)
+        .snapshots()
+        .listen((snapshot) {
+          final rideList = snapshot.docs
+              .map((doc) => Ride.fromMap(doc.data(), doc.id))
+              .toList();
+          rides.assignAll(rideList);
+          filterRides(rides);
+        });
+  }
+
+  Future<void> _deleteExpiredRides() async {
+    try {
+      await rideRepository.deleteExpiredRides();
+    } catch (e) {
+      debugPrint('Error deleting expired rides: $e');
+    }
+  }
 
   Future<void> pickDepartureDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -28,7 +59,8 @@ class HomeController extends GetxController {
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (picked != null) {
-      dateController.text = DateFormat('MM-dd-yyyy').format(picked);
+      // Use consistent ISO format (yyyy-MM-dd)
+      dateController.text = DateFormat('yyyy-MM-dd').format(picked);
       filterRides(rides);
     }
   }
@@ -45,11 +77,52 @@ class HomeController extends GetxController {
           drop.isEmpty || ride.dropLocation.toLowerCase().contains(drop);
       bool matchesDate =
           date.isEmpty ||
-          ride.departureTime.toIso8601String().split("T")[0] == date;
+          DateFormat('yyyy-MM-dd').format(ride.departureTime) == date;
 
       return matchesPickup && matchesDrop && matchesDate;
     }).toList();
+
     return filteredRides;
+  }
+
+  Future<void> fetchInitialRides() async {
+    isLoading.value = true;
+    try {
+      final result = await rideRepository.fetchInitialRides();
+      rides.assignAll(result);
+      filterRides(rides);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to fetch rides: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> loadMoreRides() async {
+    if (isLoadingMore.value) return;
+
+    isLoadingMore.value = true;
+    try {
+      final result = await rideRepository.fetchNextRides();
+      rides.addAll(result);
+      filterRides(rides);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to load more rides: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoadingMore.value = false;
+    }
   }
 
   void clearTextFields() {
@@ -57,5 +130,13 @@ class HomeController extends GetxController {
     dropController.clear();
     dateController.clear();
     filterRides(rides);
+  }
+
+  @override
+  void onClose() {
+    pickupController.dispose();
+    dropController.dispose();
+    dateController.dispose();
+    super.onClose();
   }
 }

@@ -125,8 +125,8 @@ class TripDetailScreen extends GetView<TripDetailsController> {
       children: [
         _locationText(ride.pickupLocation),
         const SizedBox(height: 4),
-        if (ride.stops.isNotEmpty) ...ride.stops.map(_stopText),
         _locationText(ride.dropLocation),
+        if (ride.stops.isNotEmpty) ...ride.stops.map(_stopText),
       ],
     );
   }
