@@ -7,4 +7,7 @@ class AppAssets {
   static String homeSvg = "${svgBaseImagePath}home.svg";
   static String offerRideSvg = "${svgBaseImagePath}offer_ride.svg";
   static String requestsSvg = "${svgBaseImagePath}requests.svg";
+
+  //////Images/////////
+  static String appLogo = "${baseImagePath}comfort-go-logo.png";
 }

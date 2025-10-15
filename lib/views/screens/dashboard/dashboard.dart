@@ -15,7 +15,6 @@ class Dashboard extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final controller = Get.find<DashboardController>();
       return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.whiteColor,

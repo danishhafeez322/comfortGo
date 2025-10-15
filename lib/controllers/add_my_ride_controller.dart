@@ -28,32 +28,24 @@ class AddMyRideController extends GetxController {
   Future<bool> addRide() async {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
+
       // ✅ Collect stops (ignore empty fields)
       final stops = stopControllers
           .map((ctrl) => ctrl.text.trim())
           .where((stop) => stop.isNotEmpty)
           .toList();
-      DateTime departureDateTime = DateTime.now();
-      if (departureTimeCtrl.text.isNotEmpty) {
-        try {
-          final now = DateTime.now();
-          final timeParts = departureTimeCtrl.text.split(':');
-          final hour = int.parse(timeParts[0]);
-          final minute = int.parse(timeParts[1].split(' ')[0]);
-          final isPM = departureTimeCtrl.text.toLowerCase().contains('pm');
-          departureDateTime = DateTime(
-            now.year,
-            now.month,
-            now.day,
-            isPM && hour < 12 ? hour + 12 : hour,
-            minute,
-          );
-        } catch (e) {
-          debugPrint("Failed to parse departure time: $e");
-        }
+
+      // ✅ Use the picked date and time (from pickDepartureTime)
+      DateTime? departureDateTime =
+          departureTime; // <-- this now holds selected datetime
+
+      // Fallback: if user didn’t pick manually
+      if (departureDateTime == null || departureTimeCtrl.text.isEmpty) {
+        departureDateTime = DateTime.now();
       }
+
       final ride = Ride(
-        id: '', // Firestore will assign one; you can overwrite after add
+        id: '', // Firestore assigns one automatically
         userId: uid,
         name: nameCtrl.text.trim(),
         contactNumber: contactCtrl.text.trim(),
@@ -62,7 +54,7 @@ class AddMyRideController extends GetxController {
         vehicleYear: yearCtrl.text.trim(),
         pickupLocation: pickupCtrl.text.trim(),
         dropLocation: dropCtrl.text.trim(),
-        stops: stops, // 🆕 Added stops
+        stops: stops,
         departureTime: departureDateTime,
         seatsAvailable: int.tryParse(seatsCtrl.text.trim()) ?? 1,
         fare: fareCtrl.text.trim(),
