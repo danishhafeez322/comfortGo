@@ -72,24 +72,26 @@ class Dashboard extends GetView<DashboardController> {
 class _BottomNavBar extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 74,
-      width: 0.92.sw,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(2.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: DashBoardView.values.map((view) {
-          return BottomNavItem(
-            index: view.index,
-            label: view.value,
-            customIconString: view.icon,
-            isSelected: controller.currentView.value == view,
-            onTap: () => controller.selectBottomTab(view),
-          );
-        }).toList(),
+    return SafeArea(
+      child: Container(
+        height: 74,
+        width: 0.92.sw,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(2.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: DashBoardView.values.map((view) {
+            return BottomNavItem(
+              index: view.index,
+              label: view.value,
+              customIconString: view.icon,
+              isSelected: controller.currentView.value == view,
+              onTap: () => controller.selectBottomTab(view),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
