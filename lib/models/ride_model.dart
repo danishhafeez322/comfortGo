@@ -5,9 +5,8 @@ class Ride {
   final String userId;
   final String name;
   final String contactNumber;
-  final String vehicleModel;
-  final String vehicleColor;
-  final String vehicleYear;
+  final String vehicleName;
+  final String vehicleDetails;
   final String pickupLocation;
   final String dropLocation;
   final List<String> stops; // 🆕 Added stops
@@ -21,9 +20,8 @@ class Ride {
     required this.userId,
     required this.name,
     required this.contactNumber,
-    required this.vehicleModel,
-    required this.vehicleColor,
-    required this.vehicleYear,
+    required this.vehicleName,
+    required this.vehicleDetails,
     required this.pickupLocation,
     required this.dropLocation,
     required this.departureTime,
@@ -39,9 +37,8 @@ class Ride {
       userId: map['userId'] ?? '',
       name: map['name'] ?? '',
       contactNumber: map['contactNumber'] ?? '',
-      vehicleModel: map['vehicleModel'] ?? '',
-      vehicleColor: map['vehicleColor'] ?? '',
-      vehicleYear: map['vehicleYear'] ?? '',
+      vehicleName: map['vehicleName'] ?? '',
+      vehicleDetails: map['vehicleDetails'] ?? '',
       pickupLocation: map['pickupLocation'] ?? '',
       dropLocation: map['dropLocation'] ?? '',
       fare: map['fare'] ?? '',
@@ -66,9 +63,8 @@ class Ride {
       'userId': userId,
       'name': name,
       'contactNumber': contactNumber,
-      'vehicleModel': vehicleModel,
-      'vehicleColor': vehicleColor,
-      'vehicleYear': vehicleYear,
+      'vehicleName': vehicleName,
+      'vehicleDetails': vehicleDetails,
       'pickupLocation': pickupLocation,
       'dropLocation': dropLocation,
       'stops': stops, // 🆕 Added to Firestore map
@@ -86,9 +82,8 @@ class Ride {
       userId: userId,
       name: name,
       contactNumber: contactNumber,
-      vehicleModel: vehicleModel,
-      vehicleColor: vehicleColor,
-      vehicleYear: vehicleYear,
+      vehicleName: vehicleName,
+      vehicleDetails: vehicleDetails,
       pickupLocation: pickupLocation,
       dropLocation: dropLocation,
       fare: fare,

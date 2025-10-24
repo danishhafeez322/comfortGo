@@ -171,8 +171,9 @@ class TripDetailScreen extends GetView<TripDetailsController> {
             _infoRow(
               Icons.directions_car,
               "Vehicle",
-              "${ride.vehicleModel} (${ride.vehicleColor}, ${ride.vehicleYear})",
+              "${ride.vehicleName} (${ride.vehicleDetails})",
             ),
+
             _infoRow(Icons.person, "Driver", ride.name),
             _infoRow(Icons.phone, "Contact", ride.contactNumber),
             _infoRow(

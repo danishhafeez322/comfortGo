@@ -4,7 +4,7 @@ import 'package:comfort_go/views/widgets/common_widgets/custom_bg_paint.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // for date formatting
+import 'package:intl/intl.dart';
 
 import '../../../utils/app_sizes.dart';
 import '../../../utils/spacer.dart';
@@ -142,7 +142,7 @@ class MyRidesScreen extends GetView<MyRideController> {
                                       hSpace(8),
                                       Expanded(
                                         child: Text(
-                                          "${ride.vehicleModel} (${ride.vehicleColor}, ${ride.vehicleYear})",
+                                          "${ride.vehicleName} (${ride.vehicleDetails})",
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,

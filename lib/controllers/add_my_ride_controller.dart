@@ -9,13 +9,15 @@ import '../repositories/ride_repository.dart';
 class AddMyRideController extends GetxController {
   final RideRepository _repo = RideRepository();
   final MyRideController myRideController = MyRideController();
+  final formKey = GlobalKey<FormState>();
+
+  final vehicleNameCtrl = TextEditingController();
+  final vehicleDetailsCtrl = TextEditingController();
 
   // text controllers
   final nameCtrl = TextEditingController();
   final contactCtrl = TextEditingController();
-  final modelCtrl = TextEditingController();
-  final colorCtrl = TextEditingController();
-  final yearCtrl = TextEditingController();
+
   final pickupCtrl = TextEditingController();
   final dropCtrl = TextEditingController();
   final seatsCtrl = TextEditingController();
@@ -24,6 +26,34 @@ class AddMyRideController extends GetxController {
   final stopControllers = <TextEditingController>[].obs;
 
   DateTime? departureTime;
+
+  final List<String> cities = [
+    // Major Cities of Punjab
+    'Lahore',
+    'Islamabad',
+    'Faisalabad',
+    'Rawalpindi',
+    'Multan',
+    'Karachi',
+    'Gujranwala',
+    'Sialkot',
+    'Sargodha',
+    'Bahawalpur',
+    'Sheikhupura',
+    'Kasur',
+
+    // Other big cities of Pakistan
+    'Peshawar',
+    'Quetta',
+    'Hyderabad',
+    'Sukkur',
+    'Abbottabad',
+    'Mardan',
+    'Larkana',
+    'Mirpur',
+  ];
+  RxString selectedPickup = ''.obs;
+  RxString selectedDrop = ''.obs;
 
   Future<bool> addRide() async {
     try {
@@ -49,9 +79,8 @@ class AddMyRideController extends GetxController {
         userId: uid,
         name: nameCtrl.text.trim(),
         contactNumber: contactCtrl.text.trim(),
-        vehicleModel: modelCtrl.text.trim(),
-        vehicleColor: colorCtrl.text.trim(),
-        vehicleYear: yearCtrl.text.trim(),
+        vehicleName: vehicleNameCtrl.text.trim(),
+        vehicleDetails: vehicleDetailsCtrl.text.trim(),
         pickupLocation: pickupCtrl.text.trim(),
         dropLocation: dropCtrl.text.trim(),
         stops: stops,
@@ -115,9 +144,6 @@ class AddMyRideController extends GetxController {
   void clearForm() {
     nameCtrl.clear();
     contactCtrl.clear();
-    modelCtrl.clear();
-    colorCtrl.clear();
-    yearCtrl.clear();
     pickupCtrl.clear();
     dropCtrl.clear();
     seatsCtrl.clear();
@@ -137,9 +163,6 @@ class AddMyRideController extends GetxController {
   void onClose() {
     nameCtrl.dispose();
     contactCtrl.dispose();
-    modelCtrl.dispose();
-    colorCtrl.dispose();
-    yearCtrl.dispose();
     pickupCtrl.dispose();
     dropCtrl.dispose();
     seatsCtrl.dispose();

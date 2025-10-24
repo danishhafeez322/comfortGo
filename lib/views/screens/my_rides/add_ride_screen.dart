@@ -15,14 +15,11 @@ class AddRideScreen extends GetView<AddMyRideController> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      resizeToAvoidBottomInset: true, // allows scroll when keyboard appears
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
-          // fixed background at bottom
           Align(
             alignment: Alignment.bottomCenter,
             child: Transform(
@@ -34,13 +31,11 @@ class AddRideScreen extends GetView<AddMyRideController> {
               ),
             ),
           ),
-
-          // scrollable content
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Form(
-                key: formKey,
+                key: controller.formKey,
                 child: Obx(
                   () => ListView(
                     physics: const BouncingScrollPhysics(),
@@ -63,45 +58,123 @@ class AddRideScreen extends GetView<AddMyRideController> {
                       ),
                       vSpace(0.012.sh),
 
-                      // Basic Info
+                      /// Required: Name
                       CommonTextFieldWidget(
                         controller: controller.nameCtrl,
                         hintText: "Name",
                         borderColor: AppColors.textFieldBorderColor,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter your name";
+                          }
+                          return null;
+                        },
                       ),
                       vSpace(6),
+
+                      /// Required: Contact Number
                       CommonTextFieldWidget(
                         controller: controller.contactCtrl,
                         hintText: "Contact Number",
+                        inputType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter contact number";
+                          }
+                          if (value.length < 10) {
+                            return "Enter valid contact number";
+                          }
+                          return null;
+                        },
                       ),
                       vSpace(6),
+
+                      /// Required: Vehicle Name
                       CommonTextFieldWidget(
-                        controller: controller.modelCtrl,
-                        hintText: "Vehicle Model",
+                        controller: controller.vehicleNameCtrl,
+                        hintText: "Vehicle Name",
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter vehicle name";
+                          }
+                          return null;
+                        },
                       ),
                       vSpace(6),
+
+                      /// Optional: Vehicle Details
                       CommonTextFieldWidget(
-                        controller: controller.colorCtrl,
-                        hintText: "Vehicle Color",
+                        controller: controller.vehicleDetailsCtrl,
+                        hintText:
+                            "Vehicle Details (e.g. color, year) - Optional",
                       ),
                       vSpace(6),
-                      CommonTextFieldWidget(
-                        controller: controller.yearCtrl,
-                        hintText: "Vehicle Year",
+
+                      /// Required: Pickup Location
+                      DropdownButtonFormField<String>(
+                        value: controller.selectedPickup.value.isNotEmpty
+                            ? controller.selectedPickup.value
+                            : null,
+                        decoration: InputDecoration(
+                          labelText: "Pickup Location",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) =>
+                            value == null ? "Select pickup location" : null,
+                        items: controller.cities.map((city) {
+                          return DropdownMenuItem(
+                            value: city,
+                            child: Text(city),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            controller.selectedPickup.value = value;
+                            controller.pickupCtrl.text = value;
+                            if (controller.selectedDrop.value == value) {
+                              controller.selectedDrop.value = '';
+                              controller.dropCtrl.clear();
+                            }
+                          }
+                        },
                       ),
                       vSpace(6),
-                      CommonTextFieldWidget(
-                        controller: controller.pickupCtrl,
-                        hintText: "Pickup Location",
-                      ),
-                      vSpace(6),
-                      CommonTextFieldWidget(
-                        controller: controller.dropCtrl,
-                        hintText: "Drop Location",
+
+                      /// Required: Drop Location
+                      DropdownButtonFormField<String>(
+                        value: controller.selectedDrop.value.isNotEmpty
+                            ? controller.selectedDrop.value
+                            : null,
+                        decoration: InputDecoration(
+                          labelText: "Drop Location",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        validator: (value) =>
+                            value == null ? "Select drop location" : null,
+                        items: controller.cities
+                            .where((c) => c != controller.selectedPickup.value)
+                            .map(
+                              (city) => DropdownMenuItem(
+                                value: city,
+                                child: Text(city),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value != null) {
+                            controller.selectedDrop.value = value;
+                            controller.dropCtrl.text = value;
+                          }
+                        },
                       ),
 
-                      // Stops (Dynamic)
                       vSpace(6),
+
+                      /// Optional: Stops
                       Text(
                         "Add Stops (Optional)",
                         style: TextStyle(
@@ -141,11 +214,11 @@ class AddRideScreen extends GetView<AddMyRideController> {
                         icon: const Icon(Icons.add_circle_outline),
                         label: const Text("Add Stop"),
                       ),
-
-                      // Departure Time
                       vSpace(6),
+
+                      /// Optional: Departure Time
                       Text(
-                        "Departure Time",
+                        "Departure Time (Optional)",
                         style: TextStyle(
                           fontSize: FontSizes.mediumFontSize(),
                           fontWeight: FontWeight.bold,
@@ -162,25 +235,47 @@ class AddRideScreen extends GetView<AddMyRideController> {
                           ),
                         ),
                       ),
-
-                      // Fare and Seats
                       vSpace(6),
+
+                      /// Required: Seats Available
                       CommonTextFieldWidget(
                         controller: controller.seatsCtrl,
                         inputType: TextInputType.number,
                         hintText: "Seats Available",
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter available seats";
+                          }
+                          final seats = int.tryParse(value);
+                          if (seats == null || seats <= 0) {
+                            return "Enter a valid seat count";
+                          }
+                          return null;
+                        },
                       ),
                       vSpace(6),
+
+                      /// Required: Fare
                       CommonTextFieldWidget(
                         controller: controller.fareCtrl,
                         inputType: TextInputType.number,
                         hintText: "Fare per person",
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return "Please enter fare";
+                          }
+                          final fare = double.tryParse(value);
+                          if (fare == null || fare <= 0) {
+                            return "Enter valid fare amount";
+                          }
+                          return null;
+                        },
                       ),
 
                       const SizedBox(height: 16),
                       ExpandedButton(
                         onTap: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (controller.formKey.currentState!.validate()) {
                             final success = await controller.addRide();
                             if (success) {
                               await controller.myRideController.fetchMyRides();
