@@ -52,6 +52,32 @@ class AppStrings {
   static const String offerRide = "Offer Ride";
   static const String requests = "Requests";
   static const String wait = "Please Wait";
+
+  static final List<String> cities = [
+    // Major Cities of Punjab
+    'Lahore',
+    'Islamabad',
+    'Faisalabad',
+    'Rawalpindi',
+    'Multan',
+    'Karachi',
+    'Gujranwala',
+    'Sialkot',
+    'Sargodha',
+    'Bahawalpur',
+    'Sheikhupura',
+    'Kasur',
+
+    // Other big cities of Pakistan
+    'Peshawar',
+    'Quetta',
+    'Hyderabad',
+    'Sukkur',
+    'Abbottabad',
+    'Mardan',
+    'Larkana',
+    'Mirpur',
+  ];
 }
 
 class AppInfo {

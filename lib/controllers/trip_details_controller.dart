@@ -14,6 +14,10 @@ class TripDetailsController extends GetxController {
 
   Future<void> reserveYourSeat(Ride ride) async {
     try {
+      if (ride.seatsAvailable < 1) {
+        Get.snackbar("Hey!", "No seats available");
+        return;
+      }
       final name = nameCtrl.text.trim();
       final contact = contactCtrl.text.trim();
       final seatsText = numberOfSeatsCtrl.text.trim();
@@ -46,7 +50,7 @@ class TripDetailsController extends GetxController {
       contactCtrl.clear();
       numberOfSeatsCtrl.clear();
       Get.back();
-      Get.snackbar("Success", "Seat reserved successfully");
+      Get.snackbar("Success", "Request sent, driver will contact you soon");
     } catch (e) {
       Get.snackbar("Error", "Failed to reserve seat: $e");
     }

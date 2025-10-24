@@ -19,6 +19,9 @@ class RideRequestController extends GetxController {
 
   RxBool isLoading = false.obs;
 
+  RxString selectedPickup = ''.obs;
+  RxString selectedDrop = ''.obs;
+
   @override
   void onInit() {
     super.onInit();

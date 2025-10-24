@@ -27,31 +27,6 @@ class AddMyRideController extends GetxController {
 
   DateTime? departureTime;
 
-  final List<String> cities = [
-    // Major Cities of Punjab
-    'Lahore',
-    'Islamabad',
-    'Faisalabad',
-    'Rawalpindi',
-    'Multan',
-    'Karachi',
-    'Gujranwala',
-    'Sialkot',
-    'Sargodha',
-    'Bahawalpur',
-    'Sheikhupura',
-    'Kasur',
-
-    // Other big cities of Pakistan
-    'Peshawar',
-    'Quetta',
-    'Hyderabad',
-    'Sukkur',
-    'Abbottabad',
-    'Mardan',
-    'Larkana',
-    'Mirpur',
-  ];
   RxString selectedPickup = ''.obs;
   RxString selectedDrop = ''.obs;
 

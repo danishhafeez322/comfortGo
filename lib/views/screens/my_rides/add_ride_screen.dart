@@ -1,3 +1,4 @@
+import 'package:comfort_go/constants/app_strings.dart';
 import 'package:comfort_go/controllers/add_my_ride_controller.dart';
 import 'package:comfort_go/extentions/on_tap_extension.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
@@ -123,7 +124,7 @@ class AddRideScreen extends GetView<AddMyRideController> {
                         ),
                         validator: (value) =>
                             value == null ? "Select pickup location" : null,
-                        items: controller.cities.map((city) {
+                        items: AppStrings.cities.map((city) {
                           return DropdownMenuItem(
                             value: city,
                             child: Text(city),
@@ -155,7 +156,7 @@ class AddRideScreen extends GetView<AddMyRideController> {
                         ),
                         validator: (value) =>
                             value == null ? "Select drop location" : null,
-                        items: controller.cities
+                        items: AppStrings.cities
                             .where((c) => c != controller.selectedPickup.value)
                             .map(
                               (city) => DropdownMenuItem(
