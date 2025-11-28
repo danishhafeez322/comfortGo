@@ -7,7 +7,7 @@ import 'package:comfort_go/views/widgets/text_widgets/common_text_field_widget.d
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../constants/app_strings.dart';
+import '../../../controllers/home_controller.dart';
 import '../../../utils/app_sizes.dart';
 import '../../../utils/spacer.dart';
 
@@ -17,6 +17,7 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final allCities = Get.find<HomeController>().cities;
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
@@ -100,7 +101,7 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
                         ),
                         validator: (value) =>
                             value == null ? "Select pickup location" : null,
-                        items: AppStrings.cities.map((city) {
+                        items: allCities.map((city) {
                           return DropdownMenuItem(
                             value: city,
                             child: Text(city),
@@ -124,7 +125,7 @@ class AddRideRequestScreen extends GetView<RideRequestController> {
 
                     /// Drop Location
                     Obx(() {
-                      final availableDropCities = AppStrings.cities
+                      final availableDropCities = allCities
                           .where(
                             (city) => city != controller.selectedPickup.value,
                           )

@@ -1,4 +1,3 @@
-import 'package:comfort_go/constants/app_strings.dart';
 import 'package:comfort_go/controllers/add_my_ride_controller.dart';
 import 'package:comfort_go/extentions/on_tap_extension.dart';
 import 'package:comfort_go/utils/app_sizes.dart';
@@ -10,12 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../constants/app_colors.dart';
+import '../../../controllers/home_controller.dart';
 
 class AddRideScreen extends GetView<AddMyRideController> {
   const AddRideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final allCities = Get.find<HomeController>().cities;
+
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       resizeToAvoidBottomInset: true,
@@ -124,7 +126,7 @@ class AddRideScreen extends GetView<AddMyRideController> {
                         ),
                         validator: (value) =>
                             value == null ? "Select pickup location" : null,
-                        items: AppStrings.cities.map((city) {
+                        items: allCities.map((city) {
                           return DropdownMenuItem(
                             value: city,
                             child: Text(city),
@@ -156,7 +158,7 @@ class AddRideScreen extends GetView<AddMyRideController> {
                         ),
                         validator: (value) =>
                             value == null ? "Select drop location" : null,
-                        items: AppStrings.cities
+                        items: allCities
                             .where((c) => c != controller.selectedPickup.value)
                             .map(
                               (city) => DropdownMenuItem(

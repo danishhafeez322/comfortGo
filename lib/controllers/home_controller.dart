@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comfort_go/constants/app_strings.dart';
 import 'package:comfort_go/models/ride_model.dart';
 import 'package:comfort_go/repositories/ride_repository.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +22,8 @@ class HomeController extends GetxController {
   RxList<Ride> rides = <Ride>[].obs;
   RxList<Ride> filteredRides = <Ride>[].obs;
 
+  RxList<String> cities = <String>[].obs;
+
   /// loading states
   RxBool isLoading = false.obs;
   RxBool isLoadingMore = false.obs;
@@ -27,6 +33,7 @@ class HomeController extends GetxController {
     super.onInit();
     _deleteExpiredRides();
     listenToRides();
+    initRemoteConfig();
   }
 
   void listenToRides() {
@@ -41,6 +48,37 @@ class HomeController extends GetxController {
           rides.assignAll(rideList);
           filterRides(rides);
         });
+  }
+
+  Future<void> initRemoteConfig() async {
+    try {
+      final remoteConfig = FirebaseRemoteConfig.instance;
+
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(hours: 1),
+        ),
+      );
+
+      // Fetch & activate
+      await remoteConfig.fetchAndActivate();
+
+      // Read string list (stored as JSON array in Firebase)
+      final String rawCities = remoteConfig.getString("cities_list");
+
+      if (rawCities.isNotEmpty) {
+        final List<String> decoded = List<String>.from(jsonDecode(rawCities));
+
+        cities.assignAll(decoded);
+        print("Cities loaded: $decoded");
+      } else {
+        // fallback — in case remote config has nothing
+        cities.assignAll(AppStrings.cities);
+      }
+    } catch (e) {
+      print("RemoteConfig Error: $e");
+    }
   }
 
   Future<void> _deleteExpiredRides() async {
